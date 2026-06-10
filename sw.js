@@ -1,12 +1,13 @@
 /* Service worker — cache do app para funcionamento 100% offline */
 'use strict';
 
-const CACHE = 'checklist-gas-v2';
+const CACHE = 'checklist-gas-v3';
 const ARQUIVOS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './css/style.css',
+  './js/versao.js',
   './js/data.js',
   './js/db.js',
   './js/assinatura.js',

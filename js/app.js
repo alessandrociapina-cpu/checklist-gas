@@ -141,9 +141,58 @@ function montarTopo(titulo, sub, voltar) {
   if (voltar) document.getElementById('btn-voltar').onclick = () => { location.hash = voltar; };
 }
 
+/* ---------- versão e histórico de atualizações ---------- */
+let popVersoes = null;
+
+document.addEventListener('click', e => {
+  if (popVersoes && !popVersoes.hidden && !popVersoes.contains(e.target)) popVersoes.hidden = true;
+});
+
+function montarBadgeVersao() {
+  if (popVersoes) { popVersoes.remove(); popVersoes = null; }
+  $topo().insertAdjacentHTML('beforeend',
+    `<button class="badge-versao" id="badge-versao" aria-label="Versão e histórico de atualizações">v${APP_VERSAO}</button>`);
+
+  const badge = document.getElementById('badge-versao');
+  const pop = document.createElement('div');
+  pop.className = 'popover-versoes';
+  pop.hidden = true;
+  pop.innerHTML = `
+    <h4>Histórico de atualizações</h4>
+    ${HISTORICO_VERSOES.map(v => `
+      <div class="versao-bloco">
+        <div class="versao-cabeca"><b>v${esc(v.versao)}</b><span>${fmtData(v.data)}</span></div>
+        <ul>${v.itens.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+      </div>`).join('')}`;
+  document.body.appendChild(pop);
+  popVersoes = pop;
+
+  let fecharTimer = null;
+  let abriuPorHover = 0;
+  const abrir = () => {
+    clearTimeout(fecharTimer);
+    if (pop.hidden) abriuPorHover = Date.now();
+    pop.hidden = false;
+  };
+  const fechar = () => { fecharTimer = setTimeout(() => { pop.hidden = true; }, 250); };
+
+  badge.addEventListener('mouseenter', abrir);
+  badge.addEventListener('mouseleave', fechar);
+  pop.addEventListener('mouseenter', abrir);
+  pop.addEventListener('mouseleave', fechar);
+  badge.addEventListener('click', e => {            // toque no celular
+    e.stopPropagation();
+    clearTimeout(fecharTimer);
+    // o toque dispara mouseenter antes do click: não fechar o que acabou de abrir
+    if (Date.now() - abriuPorHover < 600) pop.hidden = false;
+    else pop.hidden = !pop.hidden;
+  });
+}
+
 /* ---------- tela inicial ---------- */
 async function telaInicial() {
   montarTopo('Checklist Gás', 'Interferência/paralelismo em rede de gás', null);
+  montarBadgeVersao();
   const lista = (await DB.listarChecklists()).map(migrarChecklist);
 
   $view().innerHTML = `
