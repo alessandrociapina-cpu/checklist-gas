@@ -1,44 +1,54 @@
-/* Definição do checklist — espelha fielmente a planilha CheckListGasOVMS_1_1.xlsx */
+/* Definição do checklist — espelha a planilha CheckListGasOVMS_1_1.xlsx + melhorias de campo */
 'use strict';
+
+const MUNICIPIOS = [
+  'São José dos Campos', 'Caçapava', 'Monteiro Lobato', 'Jambeiro', 'Igaratá', 'Santa Branca'
+];
 
 const CHECKLIST_DEF = {
   titulo: 'CHECKLIST - MANUTENÇÃO E OBRAS COM INTERFERÊNCIA/PARALELISMO EM REDE DE GÁS',
 
-  /* Informações de Interesse Geral — 20 campos */
+  /* Informações de Interesse Geral (numeração calculada pela posição) */
   geral: [
-    { id: 'os',              num: 1,  label: 'Nº OS',                                            tipo: 'texto' },
-    { id: 'contrato',        num: 2,  label: 'Contrato/Contratada',                              tipo: 'texto',
+    { id: 'os',              label: 'Nº OS',                                          tipo: 'texto' },
+    { id: 'contrato',        label: 'Contrato/Contratada',                            tipo: 'texto',
       padrao: '4600060322 / CONSÓRCIO SNJ SANEAMENTO' },
-    { id: 'endereco',        num: 3,  label: 'Endereço',                                         tipo: 'texto' },
-    { id: 'municipio',       num: 4,  label: 'Município',                                        tipo: 'texto',
-      padrao: 'São José dos Campos' },
-    { id: 'data',            num: 5,  label: 'Data',                                             tipo: 'data' },
-    { id: 'equipe',          num: 6,  label: 'Equipe',                                           tipo: 'texto' },
-    { id: 'responsavel',     num: 7,  label: 'Responsável',                                      tipo: 'texto' },
-    { id: 'pressaoGas',      num: 8,  label: 'Pressão Rede de Gás',                              tipo: 'opcoes',
+    { id: 'endereco',        label: 'Endereço',                                       tipo: 'texto' },
+    { id: 'municipio',       label: 'Município',                                      tipo: 'select',
+      opcoes: MUNICIPIOS, padrao: 'São José dos Campos' },
+    { id: 'data',            label: 'Data',                                           tipo: 'data' },
+    { id: 'horaInicio',      label: 'Horário de Início do Serviço',                   tipo: 'hora' },
+    { id: 'horaFim',         label: 'Horário de Término do Serviço',                  tipo: 'hora' },
+    { id: 'equipe',          label: 'Equipe',                                         tipo: 'texto' },
+    { id: 'responsavel',     label: 'Responsável',                                    tipo: 'texto' },
+    { id: 'pressaoGas',      label: 'Pressão Rede de Gás',                            tipo: 'opcoes',
       opcoes: ['350 mbar', '4 bar', '7 bar', '17 bar'] },
-    { id: 'materialGas',     num: 9,  label: 'Material Rede/Ramal de Gás',                       tipo: 'opcoes',
+    { id: 'materialGas',     label: 'Material Rede/Ramal de Gás',                     tipo: 'opcoes',
       opcoes: ['PE', 'Aço'] },
-    { id: 'diametroGas',     num: 10, label: 'Diâmetro Rede/Ramal de Gás',                       tipo: 'opcoes',
+    { id: 'diametroGas',     label: 'Diâmetro Rede/Ramal de Gás',                     tipo: 'opcoes',
       opcoes: ['20', '40', '63', '90', '125', '4"', '6"', '8"'] },
-    { id: 'diametroAgua',    num: 11, label: 'Diâmetro Rede de Água/Esgoto',                     tipo: 'opcoes',
+    { id: 'diametroAgua',    label: 'Diâmetro Rede de Água/Esgoto',                   tipo: 'opcoes',
       opcoes: ['32', '50', '63', '75', '80', '90', '110', '160', '200', '315'] },
-    { id: 'materialAgua',    num: 12, label: 'Material Rede de Água/Esgoto',                     tipo: 'opcoes',
-      opcoes: ['FF', 'PVC', 'PEAD', 'DEFOFO'] },
-    { id: 'imoveisAfetados', num: 13, label: 'Quantidade de Imóveis Afetados (Abastecimento)',   tipo: 'numero' },
-    { id: 'hospitais',       num: 14, label: 'Hospitais/Escolas Próximos/Clientes Especiais',    tipo: 'opcoes',
+    { id: 'materialAgua',    label: 'Material Rede de Água/Esgoto',                   tipo: 'opcoes',
+      opcoes: ['FF', 'PVC', 'PEAD', 'DEFOFO', 'Cerâmica'] },
+    { id: 'imoveisAfetados', label: 'Quantidade de Imóveis Afetados (Abastecimento)', tipo: 'numero' },
+    { id: 'hospitais',       label: 'Hospitais/Escolas Próximos/Clientes Especiais',  tipo: 'opcoes',
       opcoes: ['Sim', 'Não'] },
-    { id: 'distanciaRedes',  num: 15, label: 'Distância entre Redes (m)',                        tipo: 'numero', passo: '0.01' },
-    { id: 'profGas',         num: 16, label: 'Profundidade Rede de Gás (m)',                     tipo: 'numero', passo: '0.01' },
-    { id: 'profAgua',        num: 17, label: 'Profundidade Rede de Água (m)',                    tipo: 'numero', passo: '0.01' },
-    { id: 'criticidade',     num: 18, label: 'Classificação de Criticidade',                     tipo: 'opcoes',
+    { id: 'distanciaRedes',  label: 'Distância entre Redes (m)',                      tipo: 'numero', passo: '0.01' },
+    { id: 'profGas',         label: 'Profundidade Rede de Gás (m)',                   tipo: 'numero', passo: '0.01' },
+    { id: 'profAgua',        label: 'Profundidade Rede de Água (m)',                  tipo: 'numero', passo: '0.01' },
+    { id: 'outrasInterf',    label: 'Outras Interferências na Via',                   tipo: 'multi',
+      opcoes: ['Rede Elétrica', 'Telefonia/Fibra Óptica', 'Galeria de Águas Pluviais (GAP)', 'Drenagem', 'Outras'],
+      hint: 'Marque todas as interferências de terceiros identificadas no local' },
+    { id: 'outrasInterfDet', label: 'Detalhamento das Outras Interferências',         tipo: 'texto' },
+    { id: 'criticidade',     label: 'Classificação de Criticidade',                   tipo: 'opcoes',
       opcoes: ['Alta', 'Média', 'Baixa'],
       hint: 'Avaliar: duas ou mais redes no local, redes de alta pressão, cruzamentos e esquinas' },
-    { id: 'protocoloGas',    num: 19, label: 'Protocolo Concessionária de Gás',                  tipo: 'texto' },
-    { id: 'tecnicoGas',      num: 20, label: 'Nome do Técnico Concessionária de Gás',            tipo: 'texto' }
+    { id: 'protocoloGas',    label: 'Protocolo Concessionária de Gás',                tipo: 'texto' },
+    { id: 'tecnicoGas',      label: 'Nome do Técnico Concessionária de Gás',          tipo: 'texto' }
   ],
 
-  /* Frentes de verificação — cada item: OK, Evidência, Foto, Responsável, Observações */
+  /* Frentes — cada item: OK, justificativa (obrigatória se não OK), responsável, observações, fotos */
   frentes: [
     {
       id: 'f1',
@@ -94,6 +104,21 @@ const CHECKLIST_DEF = {
     }
   ],
 
+  /* Atualização cadastral — divergências encontradas em campo vs. cadastro (Sabesp/Comgás) */
+  cadastro: {
+    titulo: 'ATUALIZAÇÃO CADASTRAL',
+    redes: ['Água', 'Esgoto', 'Gás'],
+    divergencias: [
+      'Material diferente do cadastro',
+      'Profundidade diferente',
+      'Diâmetro diferente',
+      'Posição na via diferente',
+      'Rede não cadastrada',
+      'Outra divergência'
+    ],
+    posicoes: ['Terço adjacente', 'Terço oposto', 'Eixo da pista', 'Calçada/Passeio']
+  },
+
   assinaturas: [
     { id: 'contratada',    label: 'Responsável Contratada' },
     { id: 'administrador', label: 'Administrador do Contrato' },
@@ -102,15 +127,25 @@ const CHECKLIST_DEF = {
   ]
 };
 
-/* Cria um checklist vazio com os valores padrão da planilha */
+function novoIdRegistro() {
+  return 'rg_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+function itemFrenteVazio() {
+  return { ok: false, justificativa: '', responsavel: '', observacoes: '' };
+}
+
+/* Cria um checklist vazio com os valores padrão */
 function novoChecklist() {
   const geral = {};
-  CHECKLIST_DEF.geral.forEach(c => { geral[c.id] = c.padrao || ''; });
+  CHECKLIST_DEF.geral.forEach(c => {
+    geral[c.id] = c.tipo === 'multi' ? [] : (c.padrao || '');
+  });
   geral.data = new Date().toISOString().slice(0, 10);
 
   const frentes = {};
   CHECKLIST_DEF.frentes.forEach(f => {
-    frentes[f.id] = f.itens.map(() => ({ ok: false, responsavel: '', observacoes: '' }));
+    frentes[f.id] = f.itens.map(itemFrenteVazio);
   });
 
   const assinaturas = {};
@@ -120,15 +155,45 @@ function novoChecklist() {
     id: 'cl_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
     criadoEm: new Date().toISOString(),
     atualizadoEm: new Date().toISOString(),
-    geral, frentes, assinaturas
+    geral, frentes, assinaturas,
+    cadastro: { necessita: '', registros: [] }
   };
 }
 
-/* Progresso: itens OK / total de itens das frentes */
-function progressoChecklist(cl) {
-  let ok = 0, total = 0;
-  CHECKLIST_DEF.frentes.forEach(f => {
-    (cl.frentes[f.id] || []).forEach(it => { total++; if (it.ok) ok++; });
+/* Garante que checklists antigos (ou de backup) tenham os campos novos */
+function migrarChecklist(cl) {
+  if (!cl) return cl;
+  cl.geral = cl.geral || {};
+  CHECKLIST_DEF.geral.forEach(c => {
+    if (cl.geral[c.id] === undefined) cl.geral[c.id] = c.tipo === 'multi' ? [] : '';
   });
-  return { ok, total, pct: total ? Math.round(ok / total * 100) : 0 };
+  cl.frentes = cl.frentes || {};
+  CHECKLIST_DEF.frentes.forEach(f => {
+    if (!Array.isArray(cl.frentes[f.id])) cl.frentes[f.id] = f.itens.map(itemFrenteVazio);
+    cl.frentes[f.id].forEach(it => { if (it.justificativa === undefined) it.justificativa = ''; });
+  });
+  if (!cl.cadastro) cl.cadastro = { necessita: '', registros: [] };
+  if (!Array.isArray(cl.cadastro.registros)) cl.cadastro.registros = [];
+  cl.assinaturas = cl.assinaturas || {};
+  CHECKLIST_DEF.assinaturas.forEach(a => {
+    if (!cl.assinaturas[a.id]) cl.assinaturas[a.id] = { nome: '', img: null };
+  });
+  return cl;
+}
+
+function itemJustificado(it) {
+  return it.ok || (it.justificativa || '').trim() !== '';
+}
+
+/* Progresso: itens OK / total e pendências (sem OK e sem justificativa) */
+function progressoChecklist(cl) {
+  let ok = 0, total = 0, pend = 0;
+  CHECKLIST_DEF.frentes.forEach(f => {
+    (cl.frentes[f.id] || []).forEach(it => {
+      total++;
+      if (it.ok) ok++;
+      else if (!(it.justificativa || '').trim()) pend++;
+    });
+  });
+  return { ok, total, pend, pct: total ? Math.round(ok / total * 100) : 0 };
 }
