@@ -11,11 +11,17 @@ const CHECKLIST_DEF = {
   /* Informações de Interesse Geral (numeração calculada pela posição) */
   geral: [
     { id: 'os',              label: 'Nº OS',                                          tipo: 'texto' },
-    { id: 'contrato',        label: 'Contrato/Contratada',                            tipo: 'texto',
+    { id: 'descricaoServico', label: 'Descrição do Serviço Solicitado',               tipo: 'areatexto' },
+    { id: 'contrato',        label: 'Contrato/Contratada',                            tipo: 'select',
+      opcoes: [
+        '4600060322 / CONSÓRCIO SNJ SANEAMENTO',
+        '4600060683 / CONSÓRCIO SANEAVALE SANEAMENTO'
+      ],
       padrao: '4600060322 / CONSÓRCIO SNJ SANEAMENTO' },
     { id: 'endereco',        label: 'Endereço',                                       tipo: 'texto' },
     { id: 'municipio',       label: 'Município',                                      tipo: 'select',
-      opcoes: MUNICIPIOS, padrao: 'São José dos Campos' },
+      opcoes: [...MUNICIPIOS, 'Outros'], padrao: 'São José dos Campos',
+      outro: { id: 'municipioOutro', placeholder: 'Digite o nome do município' } },
     { id: 'data',            label: 'Data',                                           tipo: 'data' },
     { id: 'horaInicio',      label: 'Horário de Início do Serviço',                   tipo: 'hora' },
     { id: 'horaFim',         label: 'Horário de Término do Serviço',                  tipo: 'hora' },
@@ -140,6 +146,7 @@ function novoChecklist() {
   const geral = {};
   CHECKLIST_DEF.geral.forEach(c => {
     geral[c.id] = c.tipo === 'multi' ? [] : (c.padrao || '');
+    if (c.outro) geral[c.outro.id] = '';
   });
   geral.data = new Date().toISOString().slice(0, 10);
 
@@ -166,6 +173,7 @@ function migrarChecklist(cl) {
   cl.geral = cl.geral || {};
   CHECKLIST_DEF.geral.forEach(c => {
     if (cl.geral[c.id] === undefined) cl.geral[c.id] = c.tipo === 'multi' ? [] : '';
+    if (c.outro && cl.geral[c.outro.id] === undefined) cl.geral[c.outro.id] = '';
   });
   cl.frentes = cl.frentes || {};
   CHECKLIST_DEF.frentes.forEach(f => {
@@ -183,6 +191,13 @@ function migrarChecklist(cl) {
 
 function itemJustificado(it) {
   return it.ok || (it.justificativa || '').trim() !== '';
+}
+
+/* Município para exibição: usa o digitado quando a opção é "Outros" */
+function municipioExibicao(geral) {
+  return geral.municipio === 'Outros'
+    ? (geral.municipioOutro || 'Outros')
+    : geral.municipio;
 }
 
 /* Progresso: itens OK / total e pendências (sem OK e sem justificativa) */
