@@ -1,9 +1,18 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.2.0';
+const APP_VERSAO = '1.3.0';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.3.0',
+    data: '2026-06-11',
+    itens: [
+      'Contrato/Contratada em menu de seleção, incluído o contrato 4600060683 / Consórcio Saneavale Saneamento',
+      'Novo campo Descrição do Serviço Solicitado (abaixo do Nº OS)',
+      'Opção "Outros" na lista de municípios, com digitação manual do nome'
+    ]
+  },
   {
     versao: '1.2.0',
     data: '2026-06-10',

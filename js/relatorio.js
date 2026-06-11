@@ -15,6 +15,7 @@ async function telaRelatorio(cl) {
     if (c.tipo === 'multi') return (v && v.length) ? esc(v.join(', ')) : '<span class="rel-num">—</span>';
     if (!v) return '<span class="rel-num">—</span>';
     if (c.tipo === 'data') return esc(fmtData(v));
+    if (c.outro && v === 'Outros') return esc(cl.geral[c.outro.id] || 'Outros');
     return esc(v);
   };
 
@@ -119,7 +120,7 @@ async function telaRelatorio(cl) {
     <div class="relatorio" id="relatorio">
       <div class="rel-cabecalho">
         <h2>${esc(CHECKLIST_DEF.titulo)}</h2>
-        <div class="rel-meta">OS ${esc(cl.geral.os) || '—'} · ${esc(cl.geral.municipio) || '—'} · ${fmtData(cl.geral.data)}${esc(horario)}
+        <div class="rel-meta">OS ${esc(cl.geral.os) || '—'} · ${esc(municipioExibicao(cl.geral)) || '—'} · ${fmtData(cl.geral.data)}${esc(horario)}
           · Gerado em ${new Date().toLocaleString('pt-BR')}</div>
       </div>
 
@@ -169,7 +170,8 @@ async function telaRelatorio(cl) {
   document.getElementById('btn-compartilhar').onclick = async () => {
     const resumo =
       `${CHECKLIST_DEF.titulo}\n` +
-      `OS: ${cl.geral.os || '—'} | ${cl.geral.endereco || ''} - ${cl.geral.municipio || ''}\n` +
+      `OS: ${cl.geral.os || '—'} | ${cl.geral.endereco || ''} - ${municipioExibicao(cl.geral) || ''}\n` +
+      (cl.geral.descricaoServico ? `Serviço: ${cl.geral.descricaoServico}\n` : '') +
       `Data: ${fmtData(cl.geral.data)}${horario} | Responsável: ${cl.geral.responsavel || '—'}\n` +
       `Criticidade: ${cl.geral.criticidade || '—'} | Progresso: ${p.ok}/${p.total} itens (${p.pct}%)` +
       (p.pend ? ` | ⚠ ${p.pend} item(ns) sem justificativa` : '') + '\n' +

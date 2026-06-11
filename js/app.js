@@ -209,7 +209,7 @@ async function telaInicial() {
     const f = (filtro || '').toLowerCase();
     const visiveis = lista.filter(cl => {
       const g = cl.geral;
-      return !f || [g.os, g.endereco, g.responsavel, g.municipio, g.equipe]
+      return !f || [g.os, g.endereco, g.responsavel, g.municipio, g.municipioOutro, g.equipe, g.descricaoServico]
         .some(v => (v || '').toLowerCase().includes(f));
     });
     const alvo = document.getElementById('lista');
@@ -227,7 +227,7 @@ async function telaInicial() {
           <span class="os">OS ${esc(cl.geral.os) || 'sem número'}</span>
           <span class="data">${fmtData(cl.geral.data)}</span>
         </div>
-        <div class="endereco">${esc(cl.geral.endereco) || 'Endereço não informado'} · ${esc(cl.geral.municipio)}</div>
+        <div class="endereco">${esc(cl.geral.endereco) || 'Endereço não informado'} · ${esc(municipioExibicao(cl.geral))}</div>
         <div class="rodape">
           <div class="barra-prog ${completo ? 'cheia' : ''}"><div style="width:${p.pct}%"></div></div>
           <span class="pct">${p.ok}/${p.total} itens${p.pend ? `<br><span class="pend-aviso">⚠ ${p.pend} sem justif.</span>` : ''}</span>
@@ -382,10 +382,15 @@ function htmlEtapaGeral() {
             `<button class="opcao ${(v || []).includes(op) ? 'marcada' : ''}" data-valor="${esc(op)}">${esc(op)}</button>`
           ).join('') + `</div>`;
       } else if (c.tipo === 'select') {
-        controle = `<select data-campo="${c.id}">
+        controle = `<select data-campo="${c.id}" ${c.outro ? `data-tem-outro="${c.outro.id}"` : ''}>
           <option value="">Selecione…</option>
           ${c.opcoes.map(op => `<option value="${esc(op)}" ${v === op ? 'selected' : ''}>${esc(op)}</option>`).join('')}
-        </select>`;
+        </select>` +
+          (c.outro ? `<input type="text" class="campo-outro" data-campo="${c.outro.id}"
+            placeholder="${esc(c.outro.placeholder)}" value="${esc(clAtual.geral[c.outro.id])}"
+            ${v === 'Outros' ? '' : 'hidden'}>` : '');
+      } else if (c.tipo === 'areatexto') {
+        controle = `<textarea data-campo="${c.id}" placeholder="Descreva o serviço…">${esc(v)}</textarea>`;
       } else if (c.tipo === 'numero') {
         controle = `<input type="number" inputmode="decimal" ${c.passo ? `step="${c.passo}"` : ''}
           min="0" data-campo="${c.id}" value="${esc(v)}">`;
@@ -405,9 +410,14 @@ function htmlEtapaGeral() {
 }
 
 function ligarEtapaGeral() {
-  $view().querySelectorAll('input[data-campo], select[data-campo]').forEach(inp => {
+  $view().querySelectorAll('input[data-campo], select[data-campo], textarea[data-campo]').forEach(inp => {
     inp.addEventListener('input', () => {
       clAtual.geral[inp.dataset.campo] = inp.value;
+      if (inp.dataset.temOutro) {
+        const campoOutro = inp.closest('.campo').querySelector(`[data-campo="${inp.dataset.temOutro}"]`);
+        campoOutro.hidden = inp.value !== 'Outros';
+        if (!campoOutro.hidden) campoOutro.focus();
+      }
       agendarSalvar();
     });
   });
