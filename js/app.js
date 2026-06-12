@@ -390,7 +390,7 @@ function htmlEtapaGeral() {
             placeholder="${esc(c.outro.placeholder)}" value="${esc(clAtual.geral[c.outro.id])}"
             ${v === 'Outros' ? '' : 'hidden'}>` : '');
       } else if (c.tipo === 'areatexto') {
-        controle = `<textarea data-campo="${c.id}" placeholder="Descreva o serviço…">${esc(v)}</textarea>`;
+        controle = `<textarea data-campo="${c.id}" placeholder="${esc(c.placeholder || '')}">${esc(v)}</textarea>`;
       } else if (c.tipo === 'numero') {
         controle = `<input type="number" inputmode="decimal" ${c.passo ? `step="${c.passo}"` : ''}
           min="0" data-campo="${c.id}" value="${esc(v)}">`;

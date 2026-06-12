@@ -1,9 +1,22 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.3.0';
+const APP_VERSAO = '1.4.0';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.4.0',
+    data: '2026-06-12',
+    itens: [
+      'Datas e horas separadas de início e fim do serviço (campos 6 a 9)',
+      'Campo Equipe renomeado para Equipe Contratada e Responsável para Fiscal Sabesp',
+      'Campo de observações abaixo de Hospitais/Escolas/Clientes Especiais (necessidades especiais, acessibilidade etc.)',
+      'Nome do Técnico Concessionária de Gás (quando for acionado)',
+      'Frente 2: Marcação da rede na superfície pelo técnico da concessionária de gás',
+      'Frente 3: Sondagem Manual para todos os casos',
+      'Assinatura Responsável Contratada renomeada para Responsável Sabesp'
+    ]
+  },
   {
     versao: '1.3.0',
     data: '2026-06-11',
