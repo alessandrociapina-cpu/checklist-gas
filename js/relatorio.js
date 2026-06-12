@@ -109,8 +109,10 @@ async function telaRelatorio(cl) {
     </div>`;
   }).join('');
 
-  const horario = (cl.geral.horaInicio || cl.geral.horaFim)
-    ? ` · ${cl.geral.horaInicio || '—'} às ${cl.geral.horaFim || '—'}` : '';
+  const inicio = `Início: ${fmtData(cl.geral.data)}${cl.geral.horaInicio ? ' ' + cl.geral.horaInicio : ''}`;
+  const fim = (cl.geral.dataFim || cl.geral.horaFim)
+    ? ` · Fim: ${fmtData(cl.geral.dataFim)}${cl.geral.horaFim ? ' ' + cl.geral.horaFim : ''}` : '';
+  const periodo = inicio + fim;
 
   $view().innerHTML = `
     <div class="acoes-relatorio">
@@ -120,7 +122,7 @@ async function telaRelatorio(cl) {
     <div class="relatorio" id="relatorio">
       <div class="rel-cabecalho">
         <h2>${esc(CHECKLIST_DEF.titulo)}</h2>
-        <div class="rel-meta">OS ${esc(cl.geral.os) || '—'} · ${esc(municipioExibicao(cl.geral)) || '—'} · ${fmtData(cl.geral.data)}${esc(horario)}
+        <div class="rel-meta">OS ${esc(cl.geral.os) || '—'} · ${esc(municipioExibicao(cl.geral)) || '—'} · ${esc(periodo)}
           · Gerado em ${new Date().toLocaleString('pt-BR')}</div>
       </div>
 
@@ -172,7 +174,7 @@ async function telaRelatorio(cl) {
       `${CHECKLIST_DEF.titulo}\n` +
       `OS: ${cl.geral.os || '—'} | ${cl.geral.endereco || ''} - ${municipioExibicao(cl.geral) || ''}\n` +
       (cl.geral.descricaoServico ? `Serviço: ${cl.geral.descricaoServico}\n` : '') +
-      `Data: ${fmtData(cl.geral.data)}${horario} | Responsável: ${cl.geral.responsavel || '—'}\n` +
+      `${periodo} | Fiscal Sabesp: ${cl.geral.responsavel || '—'}\n` +
       `Criticidade: ${cl.geral.criticidade || '—'} | Progresso: ${p.ok}/${p.total} itens (${p.pct}%)` +
       (p.pend ? ` | ⚠ ${p.pend} item(ns) sem justificativa` : '') + '\n' +
       CHECKLIST_DEF.frentes.map(f => {

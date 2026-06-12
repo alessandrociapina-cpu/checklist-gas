@@ -11,7 +11,8 @@ const CHECKLIST_DEF = {
   /* Informações de Interesse Geral (numeração calculada pela posição) */
   geral: [
     { id: 'os',              label: 'Nº OS',                                          tipo: 'texto' },
-    { id: 'descricaoServico', label: 'Descrição do Serviço Solicitado',               tipo: 'areatexto' },
+    { id: 'descricaoServico', label: 'Descrição do Serviço Solicitado',               tipo: 'areatexto',
+      placeholder: 'Descreva o serviço…' },
     { id: 'contrato',        label: 'Contrato/Contratada',                            tipo: 'select',
       opcoes: [
         '4600060322 / CONSÓRCIO SNJ SANEAMENTO',
@@ -22,11 +23,12 @@ const CHECKLIST_DEF = {
     { id: 'municipio',       label: 'Município',                                      tipo: 'select',
       opcoes: [...MUNICIPIOS, 'Outros'], padrao: 'São José dos Campos',
       outro: { id: 'municipioOutro', placeholder: 'Digite o nome do município' } },
-    { id: 'data',            label: 'Data',                                           tipo: 'data' },
-    { id: 'horaInicio',      label: 'Horário de Início do Serviço',                   tipo: 'hora' },
-    { id: 'horaFim',         label: 'Horário de Término do Serviço',                  tipo: 'hora' },
-    { id: 'equipe',          label: 'Equipe',                                         tipo: 'texto' },
-    { id: 'responsavel',     label: 'Responsável',                                    tipo: 'texto' },
+    { id: 'data',            label: 'Data de Início do Serviço',                      tipo: 'data' },
+    { id: 'horaInicio',      label: 'Hora de Início do Serviço',                      tipo: 'hora' },
+    { id: 'dataFim',         label: 'Data de Fim do Serviço',                         tipo: 'data' },
+    { id: 'horaFim',         label: 'Hora de Fim do Serviço',                         tipo: 'hora' },
+    { id: 'equipe',          label: 'Equipe Contratada',                              tipo: 'texto' },
+    { id: 'responsavel',     label: 'Fiscal Sabesp',                                  tipo: 'texto' },
     { id: 'pressaoGas',      label: 'Pressão Rede de Gás',                            tipo: 'opcoes',
       opcoes: ['350 mbar', '4 bar', '7 bar', '17 bar'] },
     { id: 'materialGas',     label: 'Material Rede/Ramal de Gás',                     tipo: 'opcoes',
@@ -40,6 +42,8 @@ const CHECKLIST_DEF = {
     { id: 'imoveisAfetados', label: 'Quantidade de Imóveis Afetados (Abastecimento)', tipo: 'numero' },
     { id: 'hospitais',       label: 'Hospitais/Escolas Próximos/Clientes Especiais',  tipo: 'opcoes',
       opcoes: ['Sim', 'Não'] },
+    { id: 'hospitaisObs',    label: 'Observações (Hospitais/Escolas/Clientes Especiais)', tipo: 'areatexto',
+      placeholder: 'Ex.: morador com necessidades especiais, acessibilidade do imóvel, cliente que não pode ter abastecimento interrompido…' },
     { id: 'distanciaRedes',  label: 'Distância entre Redes (m)',                      tipo: 'numero', passo: '0.01' },
     { id: 'profGas',         label: 'Profundidade Rede de Gás (m)',                   tipo: 'numero', passo: '0.01' },
     { id: 'profAgua',        label: 'Profundidade Rede de Água (m)',                  tipo: 'numero', passo: '0.01' },
@@ -51,7 +55,7 @@ const CHECKLIST_DEF = {
       opcoes: ['Alta', 'Média', 'Baixa'],
       hint: 'Avaliar: duas ou mais redes no local, redes de alta pressão, cruzamentos e esquinas' },
     { id: 'protocoloGas',    label: 'Protocolo Concessionária de Gás',                tipo: 'texto' },
-    { id: 'tecnicoGas',      label: 'Nome do Técnico Concessionária de Gás',          tipo: 'texto' }
+    { id: 'tecnicoGas',      label: 'Nome do Técnico Concessionária de Gás (quando for acionado)', tipo: 'texto' }
   ],
 
   /* Frentes — cada item: OK, justificativa (obrigatória se não OK), responsável, observações, fotos */
@@ -79,7 +83,7 @@ const CHECKLIST_DEF = {
       itens: [
         { texto: 'Acionamento/Protocolo registrado' },
         { texto: 'Presença do técnico em campo' },
-        { texto: 'Marcação da rede na superfície' },
+        { texto: 'Marcação da rede na superfície pelo técnico da concessionária de gás' },
         { texto: 'Liberação formal recebida' }
       ]
     },
@@ -88,7 +92,7 @@ const CHECKLIST_DEF = {
       titulo: 'FRENTE 3 - INVESTIGAÇÃO EM CAMPO',
       curto: 'Frente 3 · Investigação',
       itens: [
-        { texto: 'Abertura de janela de testemunho manual para todos os casos',
+        { texto: 'Sondagem Manual para todos os casos',
           hint: 'Não usar retroescavadeira' },
         { texto: 'Utilização de haste de sondagem com ponteira de nylon' },
         { texto: 'Identificação da rede de gás' },
@@ -126,7 +130,7 @@ const CHECKLIST_DEF = {
   },
 
   assinaturas: [
-    { id: 'contratada',    label: 'Responsável Contratada' },
+    { id: 'contratada',    label: 'Responsável Sabesp' },
     { id: 'administrador', label: 'Administrador do Contrato' },
     { id: 'gerManutencao', label: 'Gerente de Manutenção' },
     { id: 'gerRegional',   label: 'Gerente/Diretor Regional' }
