@@ -1,9 +1,17 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.4.1';
+const APP_VERSAO = '1.5.0';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.5.0',
+    data: '2026-06-12',
+    itens: [
+      'Geoposicionamento das fotos: ao anexar, a localização GPS é registrada automaticamente',
+      'Miniaturas com indicador 📍 e relatório com as coordenadas de cada foto (com link para o mapa)'
+    ]
+  },
   {
     versao: '1.4.1',
     data: '2026-06-12',

@@ -67,6 +67,22 @@ function comprimirFoto(arquivo) {
   });
 }
 
+/* Localização GPS atual; resolve null se indisponível/negado (nunca trava o fluxo) */
+function obterLocalizacao() {
+  return new Promise(resolve => {
+    if (!('geolocation' in navigator)) return resolve(null);
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve({
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        precisao: Math.round(pos.coords.accuracy)
+      }),
+      () => resolve(null),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+    );
+  });
+}
+
 /* Anexa fotos a uma chave (item de frente ou registro cadastral) */
 function ligarFotos(wrap, itemKey, aoMudar) {
   async function render() {
@@ -74,6 +90,7 @@ function ligarFotos(wrap, itemKey, aoMudar) {
     wrap.innerHTML = fotos.map(f => `
       <div class="foto-mini">
         <img src="${f.dataUrl}" alt="Evidência">
+        ${f.local ? `<span class="geo-badge" title="📍 ${f.local.lat.toFixed(6)}, ${f.local.lon.toFixed(6)} (±${f.local.precisao} m)">📍</span>` : ''}
         <button class="rm" data-foto="${f.id}" aria-label="Remover foto">✕</button>
       </div>`).join('') +
       `<button class="btn-foto" data-add><span class="cam">📷</span>Adicionar</button>`;
@@ -96,12 +113,17 @@ function ligarFotos(wrap, itemKey, aoMudar) {
       inp.onchange = async () => {
         if (!inp.files[0]) return;
         try {
-          const dataUrl = await comprimirFoto(inp.files[0]);
+          // comprime a imagem e captura o GPS em paralelo
+          const [dataUrl, local] = await Promise.all([
+            comprimirFoto(inp.files[0]),
+            obterLocalizacao()
+          ]);
           await DB.salvarFoto({
             id: 'ft_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
             checklistId: clAtual.id,
             itemKey,
             dataUrl,
+            local,
             criadoEm: new Date().toISOString()
           });
           render();

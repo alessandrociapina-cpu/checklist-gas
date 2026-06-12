@@ -1,6 +1,17 @@
 /* Módulo de relatório — reproduz o layout da planilha e permite imprimir/salvar em PDF */
 'use strict';
 
+/* Galeria de fotos com a localização GPS de cada uma (quando registrada) */
+function galeriaFotosRel(fts, altText) {
+  return `<div class="rel-fotos">${fts.map(ft => `
+    <figure class="rel-foto-fig">
+      <img src="${ft.dataUrl}" alt="${altText}">
+      ${ft.local ? `<figcaption>📍 <a href="https://www.google.com/maps?q=${ft.local.lat},${ft.local.lon}"
+          target="_blank" rel="noopener">${ft.local.lat.toFixed(6)}, ${ft.local.lon.toFixed(6)}</a>${ft.local.precisao ? ` ±${ft.local.precisao} m` : ''}</figcaption>`
+        : `<figcaption class="sem-geo">sem localização</figcaption>`}
+    </figure>`).join('')}</div>`;
+}
+
 async function telaRelatorio(cl) {
   montarTopo(`Relatório · OS ${cl.geral.os || 'sem número'}`, null, `#/form/${cl.id}/0`);
 
@@ -53,7 +64,7 @@ async function telaRelatorio(cl) {
       const fts = fotosPorItem[`${f.id}:${i}`] || [];
       if (!fts.length) return '';
       return `<div class="rel-foto-rotulo">Item ${i + 1} — ${esc(item.texto)}</div>
-        <div class="rel-fotos">${fts.map(ft => `<img src="${ft.dataUrl}" alt="Evidência">`).join('')}</div>`;
+        ${galeriaFotosRel(fts, 'Evidência')}`;
     }).join('');
 
     const okFrente = cl.frentes[f.id].filter(d => d.ok).length;
@@ -85,7 +96,7 @@ async function telaRelatorio(cl) {
       const fts = fotosPorItem[`cad:${r.id}`] || [];
       if (!fts.length) return '';
       return `<div class="rel-foto-rotulo">Registro ${i + 1} — ${esc(r.rede) || 'rede não informada'}</div>
-        <div class="rel-fotos">${fts.map(ft => `<img src="${ft.dataUrl}" alt="Divergência">`).join('')}</div>`;
+        ${galeriaFotosRel(fts, 'Divergência')}`;
     }).join('');
     secaoCadastro = `
       <table class="rel-tabela">
