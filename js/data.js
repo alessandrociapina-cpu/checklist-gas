@@ -16,7 +16,8 @@ const CHECKLIST_DEF = {
     { id: 'contrato',        label: 'Contrato/Contratada',                            tipo: 'select',
       opcoes: [
         '4600060322 / CONSÓRCIO SNJ SANEAMENTO',
-        '4600060683 / CONSÓRCIO SANEAVALE SANEAMENTO'
+        '4600060683 / CONSÓRCIO SANEAVALE SANEAMENTO',
+        '4600059744 / CONSÓRCIO GVP'
       ],
       padrao: '4600060322 / CONSÓRCIO SNJ SANEAMENTO' },
     { id: 'endereco',        label: 'Endereço',                                       tipo: 'texto' },
