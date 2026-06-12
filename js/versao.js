@@ -1,9 +1,16 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.4.0';
+const APP_VERSAO = '1.4.1';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.4.1',
+    data: '2026-06-12',
+    itens: [
+      'Incluído o contrato 4600059744 / Consórcio GVP no menu de Contrato/Contratada'
+    ]
+  },
   {
     versao: '1.4.0',
     data: '2026-06-12',
