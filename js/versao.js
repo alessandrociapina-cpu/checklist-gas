@@ -1,9 +1,16 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.5.0';
+const APP_VERSAO = '1.5.1';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.5.1',
+    data: '2026-06-13',
+    itens: [
+      'Adicionar foto agora permite escolher entre câmera e galeria do aparelho'
+    ]
+  },
   {
     versao: '1.5.0',
     data: '2026-06-12',

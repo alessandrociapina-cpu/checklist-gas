@@ -109,7 +109,7 @@ function ligarFotos(wrap, itemKey, aoMudar) {
       const inp = document.createElement('input');
       inp.type = 'file';
       inp.accept = 'image/*';
-      inp.capture = 'environment';
+      // sem 'capture': o aparelho oferece escolher entre câmera e galeria
       inp.onchange = async () => {
         if (!inp.files[0]) return;
         try {
