@@ -1,9 +1,16 @@
 /* Versão do aplicativo e histórico de atualizações (mais recente primeiro) */
 'use strict';
 
-const APP_VERSAO = '1.5.1';
+const APP_VERSAO = '1.5.2';
 
 const HISTORICO_VERSOES = [
+  {
+    versao: '1.5.2',
+    data: '2026-06-13',
+    itens: [
+      'Botões separados de Câmera e Galeria para anexar fotos (a câmera volta a abrir direto)'
+    ]
+  },
   {
     versao: '1.5.1',
     data: '2026-06-13',
