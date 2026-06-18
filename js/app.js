@@ -93,10 +93,32 @@ function ligarFotos(wrap, itemKey, aoMudar) {
         ${f.local ? `<span class="geo-badge" title="📍 ${f.local.lat.toFixed(6)}, ${f.local.lon.toFixed(6)} (±${f.local.precisao} m)">📍</span>` : ''}
         <button class="rm" data-foto="${f.id}" aria-label="Remover foto">✕</button>
       </div>`).join('') +
-      `<button class="btn-foto" data-add><span class="cam">📷</span>Adicionar</button>`;
+      `<button class="btn-foto" data-fonte="camera"><span class="cam">📷</span>Câmera</button>
+       <button class="btn-foto" data-fonte="galeria"><span class="cam">🖼️</span>Galeria</button>`;
     if (aoMudar) aoMudar(fotos.length);
   }
   render();
+
+  async function anexar(arquivo) {
+    try {
+      // comprime a imagem e captura o GPS em paralelo
+      const [dataUrl, local] = await Promise.all([
+        comprimirFoto(arquivo),
+        obterLocalizacao()
+      ]);
+      await DB.salvarFoto({
+        id: 'ft_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
+        checklistId: clAtual.id,
+        itemKey,
+        dataUrl,
+        local,
+        criadoEm: new Date().toISOString()
+      });
+      render();
+    } catch {
+      alert('Não foi possível processar a imagem.');
+    }
+  }
 
   wrap.addEventListener('click', async e => {
     const rm = e.target.closest('[data-foto]');
@@ -105,32 +127,14 @@ function ligarFotos(wrap, itemKey, aoMudar) {
       render();
       return;
     }
-    if (e.target.closest('[data-add]')) {
+    const btn = e.target.closest('[data-fonte]');
+    if (btn) {
       const inp = document.createElement('input');
       inp.type = 'file';
       inp.accept = 'image/*';
-      // sem 'capture': o aparelho oferece escolher entre câmera e galeria
-      inp.onchange = async () => {
-        if (!inp.files[0]) return;
-        try {
-          // comprime a imagem e captura o GPS em paralelo
-          const [dataUrl, local] = await Promise.all([
-            comprimirFoto(inp.files[0]),
-            obterLocalizacao()
-          ]);
-          await DB.salvarFoto({
-            id: 'ft_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7),
-            checklistId: clAtual.id,
-            itemKey,
-            dataUrl,
-            local,
-            criadoEm: new Date().toISOString()
-          });
-          render();
-        } catch {
-          alert('Não foi possível processar a imagem.');
-        }
-      };
+      // câmera: força a captura ao vivo; galeria: sem capture, abre fotos do aparelho
+      if (btn.dataset.fonte === 'camera') inp.setAttribute('capture', 'environment');
+      inp.onchange = () => { if (inp.files[0]) anexar(inp.files[0]); };
       inp.click();
     }
   });
